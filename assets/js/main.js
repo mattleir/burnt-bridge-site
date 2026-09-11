@@ -52,6 +52,83 @@
     }
   }
 
+  /* ---- Hero slideshow ---- */
+  var stage = document.getElementById('hero-slideshow');
+  var controls = document.getElementById('hero-controls');
+  var slides = stage ? Array.prototype.slice.call(stage.querySelectorAll('img')) : [];
+
+  if (stage && slides.length > 1) {
+    var INTERVAL = 6000;
+    var index = 0;
+    var timer = null;
+    var paused = false;
+    var dots = [];
+    var motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    var pauseBtn = controls ? controls.querySelector('.hero__pause') : null;
+    var dotWrap = controls ? controls.querySelector('.hero__dots') : null;
+
+    // Build one dot per slide so the markup stays the single source of truth.
+    if (dotWrap) {
+      slides.forEach(function (slide, n) {
+        var dot = document.createElement('button');
+        dot.type = 'button';
+        dot.setAttribute('role', 'tab');
+        dot.setAttribute('aria-label', 'Background image ' + (n + 1) + ' of ' + slides.length);
+        dot.setAttribute('aria-selected', n === 0 ? 'true' : 'false');
+        dot.addEventListener('click', function () { pause(); show(n); });
+        dotWrap.appendChild(dot);
+        dots.push(dot);
+      });
+    }
+    if (controls) controls.hidden = false;
+
+    function show(n) {
+      slides[index].classList.remove('is-active');
+      if (dots[index]) dots[index].setAttribute('aria-selected', 'false');
+      index = (n + slides.length) % slides.length;
+      slides[index].classList.add('is-active');
+      if (dots[index]) dots[index].setAttribute('aria-selected', 'true');
+    }
+
+    function play() {
+      stop();
+      if (paused || motionQuery.matches || document.hidden) return;
+      timer = window.setInterval(function () { show(index + 1); }, INTERVAL);
+    }
+    function stop() {
+      if (timer) { window.clearInterval(timer); timer = null; }
+    }
+    function pause() {
+      paused = true;
+      stop();
+      if (pauseBtn) {
+        pauseBtn.setAttribute('aria-pressed', 'true');
+        pauseBtn.setAttribute('aria-label', 'Play background slideshow');
+      }
+    }
+    function resume() {
+      paused = false;
+      if (pauseBtn) {
+        pauseBtn.setAttribute('aria-pressed', 'false');
+        pauseBtn.setAttribute('aria-label', 'Pause background slideshow');
+      }
+      play();
+    }
+
+    if (pauseBtn) {
+      pauseBtn.addEventListener('click', function () { paused ? resume() : pause(); });
+    }
+
+    // Don't animate in a hidden tab, and honour a mid-session motion-preference change.
+    document.addEventListener('visibilitychange', function () { document.hidden ? stop() : play(); });
+    if (motionQuery.addEventListener) {
+      motionQuery.addEventListener('change', function () { motionQuery.matches ? stop() : play(); });
+    }
+
+    play();
+  }
+
   /* ---- Current year ---- */
   document.querySelectorAll('[data-year]').forEach(function (el) {
     el.textContent = new Date().getFullYear();
