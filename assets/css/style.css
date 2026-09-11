@@ -290,12 +290,7 @@ section { position: relative; }
 }
 .nav a:hover { opacity: 1; }
 .nav a[aria-current="page"] { opacity: 1; border-bottom-color: var(--rust); }
-.nav a.header-cta {
-  padding: .55em 1.55em .55em 1.35em;
-  font-size: .67rem;
-  opacity: 1;
-  border-bottom: 1px solid var(--btn-bg);
-}
+.header-cta { padding: .8em 1.3em; font-size: .67rem; }
 
 .nav-toggle {
   display: none;
@@ -342,7 +337,7 @@ section { position: relative; }
   .site-header.is-open .nav { display: flex; }
   .nav a { padding: 15px 0; border-bottom: 1px solid var(--ink-line); font-size: .95rem; }
   .nav a[aria-current="page"] { color: var(--rust-soft); border-bottom-color: var(--ink-line); }
-  .nav a.header-cta { margin-top: 20px; justify-content: center; border-bottom: none; padding: 1em 1.4em; }
+  .nav .header-cta { margin-top: 20px; justify-content: center; border-bottom: none; padding: 1em 1.4em; }
   .nav .header-cta[aria-current="page"] { color: #fff; }
 }
 
@@ -1133,39 +1128,19 @@ section { position: relative; }
   .service-block--flip .service-panel { order: 0; }
 }
 
-/* Forest-green media panel carrying the arch motif */
+/* Service photo — full-bleed, no wash or overlay */
 .service-panel {
   position: relative;
-  isolation: isolate;
   overflow: hidden;
   border-radius: var(--radius);
-  background: var(--forest);
+  background: var(--ink-2);
   aspect-ratio: 4 / 3;
-  display: grid;
-  place-items: center;
-  padding: 30px;
 }
 .service-panel__photo {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  z-index: -2;
-  opacity: .38;
-  filter: grayscale(.5);
-}
-.service-panel::after {
-  content: "";
-  position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(150deg, rgba(46,64,52,.82) 0%, rgba(46,64,52,.94) 100%);
-}
-.service-panel__mark { width: min(66%, 280px); height: auto; opacity: .9; }
-.service-panel__num {
-  position: absolute;
-  top: 18px; left: 20px;
-  font-family: var(--mono);
-  font-size: .72rem;
-  letter-spacing: .16em;
-  color: var(--rust-soft);
+  object-position: 50% 45%;
 }
 
 /* --- Meta grid ----------------------------------------------------------- */

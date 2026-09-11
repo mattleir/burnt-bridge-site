@@ -125,6 +125,19 @@ The nav label reads **Services** rather than Training, to match the page's own h
 
 Each service block has an `id` (`#individual`, `#small-group`, `#olympic`, `#mobility`) and the Home page's offering cards link straight to them.
 
+**The service photos** are plain full-bleed images — no colour wash, no overlay, no logo. Each block uses a 4:3 crop at two widths:
+
+| Block | Image |
+|---|---|
+| 1:1 Personal Training | `svc-1_1-1200.jpg` / `-800.jpg` |
+| Small Group Training | `svc-group-1200.jpg` / `-800.jpg` |
+| Olympic Weightlifting | `svc-pullup-1200.jpg` / `-800.jpg` |
+| Mobility & Recovery | `svc-stretch-1200.jpg` / `-800.jpg` |
+
+To swap one, drop in a replacement at the same name and size, or point the `src` and `srcset` at a new file and rewrite the `alt` text. Crops fill the box, so keep the subject near the middle; `.service-panel__photo` in the stylesheet sets the focal point via `object-position` if you need to nudge one.
+
+The page hero still carries its dark overlay — that's what keeps the headline readable over a photo.
+
 ---
 
 ## 7. The map
@@ -158,4 +171,12 @@ That's the only edit needed — the dots below the hero are generated from howev
 
 ## 9. Photos
 
-The four gym photos are in `assets/img/` at two widths each (1600px and 900px), plus wide crops used as section backgrounds. To swap one, replace the file and keep the same name — or update the `src` and the `alt` text describing what's in the new photo.
+Photos live in `assets/img/`, each at two widths so phones don't download desktop-sized files:
+
+- `hero-1/2/3-*.jpg` — Home hero slideshow (16:9), plus `hero-2-portrait-900.jpg` for phones
+- `svc-*-1200.jpg` / `-800.jpg` — the four Services blocks (4:3)
+- `rdl`, `pullup`, `mobility`, `consult`, `band` — About page and section backgrounds
+
+To swap one, replace the file and keep the same name — or update the `src`/`srcset` and rewrite the `alt` text to describe the new photo.
+
+**Before deploying**, note that the full-resolution originals you dropped in (`1_1.jpeg`, `group.jpeg`, `stretch.jpeg`) are around 5MB each and aren't used by any page — the site uses the optimized crops. Delete them from `assets/img/` or move them to a separate folder so they don't get uploaded with the site.
