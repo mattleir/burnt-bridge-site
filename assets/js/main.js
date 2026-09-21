@@ -147,6 +147,13 @@
       note.setAttribute('role', 'status');
     };
 
+    // Netlify Forms expects application/x-www-form-urlencoded, not multipart.
+    var encode = function (data) {
+      return Object.keys(data)
+        .map(function (key) { return encodeURIComponent(key) + '=' + encodeURIComponent(data[key]); })
+        .join('&');
+    };
+
     form.addEventListener('submit', function (e) {
       // Honeypot — silently drop bot submissions.
       if (form.querySelector('[name="_company"]').value !== '') {
@@ -154,25 +161,7 @@
         return;
       }
 
-      var action = form.getAttribute('action') || '';
-
-      // Not wired up to a form service yet: explain instead of failing silently.
-      if (action.indexOf('YOUR_FORM_ID') !== -1 || action === '') {
-        e.preventDefault();
-        if (!form.reportValidity()) return;
-        say(
-          'warn',
-          '<strong>This form isn’t connected yet.</strong> ' +
-          'Add your form endpoint to the <code>action</code> attribute on ' +
-          '<code>contact.html</code> (see <code>README.md</code>) and submissions ' +
-          'will start arriving by email. In the meantime, reach out at ' +
-          '<a href="mailto:hello@burntbridgestrengthlab.com">hello@burntbridgestrengthlab.com</a>.'
-        );
-        note.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-        return;
-      }
-
-      // Wired up: submit over fetch so the visitor stays on the page.
+      // Submit over fetch so the visitor stays on the page.
       e.preventDefault();
       if (!form.reportValidity()) return;
 
@@ -180,10 +169,13 @@
       var original = submit.textContent;
       submit.textContent = 'Sending…';
 
-      fetch(action, {
+      var data = {};
+      new FormData(form).forEach(function (value, key) { data[key] = value; });
+
+      fetch(form.getAttribute('action') || '/', {
         method: 'POST',
-        body: new FormData(form),
-        headers: { Accept: 'application/json' }
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: encode(data)
       })
         .then(function (res) {
           if (!res.ok) throw new Error('Request failed');

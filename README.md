@@ -21,23 +21,24 @@ assets/
 
 ## 1. Connect the contact form (do this first)
 
-The form on `contact.html` is fully built but not yet pointed at a mailbox. Right now, submitting it shows a message explaining that it needs connecting.
+The form on `contact.html` is wired up for **Netlify Forms** — no external service, sign-up, or ID needed.
 
-**With Formspree (free tier, ~2 minutes):**
+Netlify detects the form automatically at deploy time because of two attributes already on it:
 
-1. Sign up at [formspree.io](https://formspree.io) and create a new form.
-2. Copy the endpoint it gives you — it looks like `https://formspree.io/f/abcdwxyz`.
-3. Open `contact.html`, find this line (around line 60):
+```html
+<form id="consult-form" name="consult-form" method="POST" action="/contact.html" data-netlify="true" netlify-honeypot="_company" novalidate>
+  <input type="hidden" name="form-name" value="consult-form">
+```
 
-   ```html
-   <form id="consult-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" novalidate>
-   ```
+**To activate it:**
 
-4. Replace the whole `action` URL with yours. Save.
+1. Deploy the site to Netlify (drag-and-drop at [netlify.com/drop](https://netlify.com/drop), or connect the git repo — either works).
+2. That's it. Netlify's build step scans the HTML, finds `data-netlify="true"`, and starts accepting submissions immediately.
+3. Go to your site's **Site settings → Forms** in the Netlify dashboard to see submissions, and set up **Notifications** there (email, Slack, webhook) so you're alerted when someone submits.
 
-That's it. Submissions arrive by email, the visitor stays on the page, and a confirmation message appears in place. The same works with Netlify Forms, Basin, Getform, or any endpoint that accepts a `POST` and returns JSON.
+The visitor stays on the page — `assets/js/main.js` submits over `fetch` and shows a confirmation message in place, just like before. This form **only works once the site is actually hosted on Netlify** — submitting it from a plain local file or a non-Netlify host will fail.
 
-A honeypot field is already in place to absorb bot submissions silently.
+A honeypot field (`_company`) is already in place, wired to both a JS check and Netlify's own `netlify-honeypot` spam filter, to absorb bot submissions silently.
 
 ---
 

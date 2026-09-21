@@ -85,12 +85,13 @@
           <h2 style="font-size:clamp(1.3rem,2.2vw,1.6rem);margin-bottom:1.6rem">Schedule your consult</h2>
 
           <!-- ==========================================================
-               TO ACTIVATE THIS FORM:
-               Replace YOUR_FORM_ID below with your form endpoint.
-               Formspree example: https://formspree.io/f/abcdwxyz
-               See README.md for step-by-step instructions.
+               Netlify Forms: detected automatically at deploy time because
+               of name="consult-form" + data-netlify="true" below. No
+               external endpoint or ID needed — submissions show up in
+               Site settings → Forms on Netlify. See README.md for details.
                ========================================================== -->
-          <form id="consult-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST" novalidate>
+          <form id="consult-form" name="consult-form" method="POST" action="/contact.html" data-netlify="true" netlify-honeypot="_company" novalidate>
+            <input type="hidden" name="form-name" value="consult-form">
             <div class="field-row">
               <div class="field">
                 <label for="name">Name <span class="req" aria-hidden="true">*</span></label>
